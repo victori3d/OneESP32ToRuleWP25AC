@@ -21,8 +21,8 @@ substitutions:
   kessel_can_id: "0x180"
   hk1_can_id: "0x301"
   hk2_can_id: "0x302"
-  manager_can_id: "0x6a1"
-  espclient_can_id: "0x6a2"
+  manager_can_id: "0x480" #"0x6a1"
+  espclient_can_id: "0x700"
 
 #########################################
 #                                       #
