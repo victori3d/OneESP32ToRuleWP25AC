@@ -16,6 +16,7 @@ esphome:
       - "-DKESSEL_ID=$kessel_can_id"
       - "-DHK1_ID=$hk1_can_id"
       - "-DHK2_ID=$hk2_can_id"
+      - "-DHEIZMODUL_ID=$heizmod_can_id" #needs to be specified.
 
 substitutions:
   kessel_can_id: "0x180"
