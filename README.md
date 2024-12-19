@@ -2,9 +2,7 @@ This project aims to provide all kinds of useful features for your Home Assistan
 
 ## Features:
 
-  - SmartMeter readings via optical sensor [https://amzn.eu/d/1a28LBy]
-  - WaterMeter readings via [https://amzn.eu/d/8Rx0UVJ]
-  - Controlling a Tecalor THZ 504 (or other Tecalor | Stiebel Eltron heat pumps) via CAN  [https://amzn.eu/d/5nJJK3r]
+  - Controlling a Stiebel Eltron WP 25AC via CAN  [https://amzn.eu/d/5nJJK3r]
 
 ## Prerequisites:
 
