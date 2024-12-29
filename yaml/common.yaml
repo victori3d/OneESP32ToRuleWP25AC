@@ -1,14 +1,14 @@
 esphome:
   includes:
-    - OneESP32ToRuleWP/src/callback_handler.h
-    - OneESP32ToRuleWP/src/communication.h
-    - OneESP32ToRuleWP/src/mapper.h
-    - OneESP32ToRuleWP/src/mapper.cpp
-    - OneESP32ToRuleWP/src/property.h
-    - OneESP32ToRuleWP/src/property.cpp
-    - OneESP32ToRuleWP/src/simple_variant.h
-    - OneESP32ToRuleWP/src/type.h
-    - OneESP32ToRuleWP/src/type.cpp
+    - OneESP32ToRuleWP25AC/src/callback_handler.h
+    - OneESP32ToRuleWP25AC/src/communication.h
+    - OneESP32ToRuleWP25AC/src/mapper.h
+    - OneESP32ToRuleWP25AC/src/mapper.cpp
+    - OneESP32ToRuleWP25AC/src/property.h
+    - OneESP32ToRuleWP25AC/src/property.cpp
+    - OneESP32ToRuleWP25AC/src/simple_variant.h
+    - OneESP32ToRuleWP25AC/src/type.h
+    - OneESP32ToRuleWP25AC/src/type.cpp
   platformio_options:
     build_flags:
       - "-DESPCLIENT_ID=$espclient_can_id"
