@@ -15,5 +15,4 @@ packages:
   PUFFERSOLLTEMP:                 !include { file: wp_temperature.yaml, vars: { property: "PUFFERSOLLTEMP" }}
   DRUCK_HEIZKREIS:                !include { file: wp_generic.yaml, vars: { property: "DRUCK_HEIZKREIS", interval: "never", unit: "bar"  , icon: "mdi:water-pressure", accuracy_decimals: "1" }}
   QUELLENDRUCK:                   !include { file: wp_generic.yaml, vars: { property: "QUELLENDRUCK"   , interval: "never", unit: "bar"  , icon: "mdi:water-pressure", accuracy_decimals: "1" }}
-  VOLUMENSTROM:                   !include { file: wp_generic.yaml, vars: { property: "VOLUMENSTROM"   , interval: "never", unit: "l/min", icon: "mdi:flow"          , accuracy_decimals: "1" }}  
   SOMMERBETRIEB_TEMP:             !include { file: wp_number.yaml, vars:  { property: "SOMMERBETRIEB_TEMP", icon: "mdi:sun-thermometer", min: "15.0", max: "25.0", step: "1.0", unit: "°C"  }}  
