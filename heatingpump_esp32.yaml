@@ -4,6 +4,12 @@ esphome:
 
   platform: ESP32
   board: esp32dev
+  platformio_options:
+    build_flags:
+      - "-std=gnu++17"
+    build_unflags:
+      - "-std=gnu++11"
+      - "-fno-rtti"
 
 # Enable logging
 logger:
