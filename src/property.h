@@ -57,6 +57,7 @@ struct Property : public detail::Property {
 
     PROPERTY(INDEX_NOT_FOUND, 0x0000);
     PROPERTY(FEHLERMELDUNG, 0x0001);
+    PROPERTY(KESSELSOLLTEMP, 0x0002, Type::et_dec_val);
     PROPERTY(SPEICHERSOLLTEMP, 0x0003, Type::et_dec_val);
     PROPERTY(VORLAUFSOLLTEMP, 0x0004, Type::et_dec_val);
     PROPERTY(AUSSENTEMP, 0x000c, Type::et_dec_val);
@@ -97,8 +98,6 @@ struct Property : public detail::Property {
     PROPERTY(WAERMEERTRAG_HEIZ_TAG_KWH, 0x092f, Type::et_double_val);
     PROPERTY(WAERMEERTRAG_HEIZ_SUM_KWH, 0x0930);
     PROPERTY(WAERMEERTRAG_HEIZ_SUM_MWH, 0x0931, Type::et_double_val);
-
-#if defined(THZ_504) || defined(THZ_404) || defined(THZ_5_5_ECO)
     PROPERTY(RAUMSOLLTEMP_I, 0x0005, Type::et_dec_val);
     PROPERTY(RAUMSOLLTEMP_NACHT, 0x0008, Type::et_dec_val);
     PROPERTY(SAMMLERISTTEMP, 0x000d, Type::et_dec_val);
@@ -156,20 +155,7 @@ struct Property : public detail::Property {
     PROPERTY(LAUFZEIT_FILTER, 0xc111);
     PROPERTY(DIFFERENZDRUCK, 0xc11e);
     PROPERTY(BETRIEBS_STATUS_2, 0xc356);
-#endif
-
-#if defined(THZ_5_5_ECO)
-    PROPERTY(SOMMERBETRIEB_TEMP, 0x0116, Type::et_dec_val);
-    PROPERTY(LUEFT_STUFE_BEREITSCHAFT, 0x056f);
-    PROPERTY(LUEFT_ZEIT_AUSSERPLAN_STUFE1, 0x0572);
-    PROPERTY(LUEFT_ZEIT_AUSSERPLAN_STUFE2, 0x0573);
-    PROPERTY(LUEFT_ZEIT_AUSSERPLAN_STUFE3, 0x0574);
-    PROPERTY(SOMMERBETRIEB_HYSTERESE, 0x05a2, Type::et_dec_val);
-    PROPERTY(LUEFT_STUFE_HAND, 0x0612);
-#endif
-
-#if defined(TTF_07_C)
-    PROPERTY(PROGRAMMSCHALTER, 0x005a);
+    PROPERTY(SPEICHER_STATUS, 0x005a, Type::et_little_endian);
     PROPERTY(PUFFERISTTEMP, 0x0078, Type::et_dec_val);
     PROPERTY(QUELLE_IST, 0x01d4, Type::et_dec_val);
     PROPERTY(PUFFERSOLLTEMP, 0x01d5, Type::et_dec_val);
@@ -189,7 +175,6 @@ struct Property : public detail::Property {
     PROPERTY(WARMWASSER, 0x0802);
     PROPERTY(ANLAGENFROST, 0x0a00, Type::et_dec_val);
     PROPERTY(WW_ECO, 0x0a06, Type::et_dec_val);
-#endif
 };
 
 #endif
