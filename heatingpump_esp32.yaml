@@ -26,7 +26,12 @@ wifi:
     gateway: 192.168.178.1
     dns1: 192.168.178.25
     subnet: 255.255.255.0
-  use_address: heatingpump.local  
+  use_address: heatingpump.local 
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Heatingpump Fallback Hotspot"
+    password: "AsBl9n46jlOx"  
   
 time:
   - platform: homeassistant
