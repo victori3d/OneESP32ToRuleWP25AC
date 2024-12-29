@@ -78,7 +78,7 @@ button:
 #                                       #
 #########################################
 packages:
-  sensors: !include OneESP32ToRuleWP25AC/yaml/sensors.yaml
+#  sensors: !include OneESP32ToRuleWP25AC/yaml/sensors.yaml
   wp25ac: !include OneESP32ToRuleWP25AC/yaml/wp25ac.yaml
 # thz404: !include OneESP32ToRuleWP25AC/yaml/thz404.yaml
 # thz504: !include OneESP32ToRuleWP25AC/yaml/thz504.yaml
