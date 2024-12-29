@@ -167,8 +167,11 @@ sensor:
 #                                       #
 #########################################
 canbus:
-  - id: wp_can
+  - platform: mcp2515
+    id: wp_can
     can_id: $espclient_can_id
+    spi_id: McpSpi
+    cs_pin: GPIO12
     use_extended_id: false
     bit_rate: 20kbps
     on_frame:
