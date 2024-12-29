@@ -72,10 +72,6 @@ canbus:
     id: my_mcp2515
     spi_id: McpSpi
     cs_pin: GPIO12
-    can_id: 700
-    use_extended_id: false
-    bit_rate: 20kbps
-    on_frame:  
 
 #########################################
 #                                       #
