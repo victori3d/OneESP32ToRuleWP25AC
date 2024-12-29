@@ -31,9 +31,9 @@ substitutions:
   interval_once_in_a_while: 1h
 
   #ggf. Einblenden.
-   entity_room_temperature: "sensor.durchschnittstemperatur"
-  # entity_room_temperature: "sensor.durchschnittstemperatur_haus_ohne_keller"
-   entity_humidity: "sensor.durchschnitt_luftfeuchtigkeit_haus"
+  entity_room_temperature: "sensor.durchschnittstemperatur"
+  # entity_room_temperature: "sensor.durchschnittstemperatur_haus_ohne_keller  
+  entity_humidity: "sensor.durchschnitt_luftfeuchtigkeit_haus"
 
 #########################################
 #                                       #
