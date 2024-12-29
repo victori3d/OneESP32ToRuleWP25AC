@@ -1,6 +1,6 @@
 esphome:
   includes:
-    - OneESP32ToRuleThemAll/src/custom_climate.h
+    - OneESP32ToRuleWP25AC/src/custom_climate.h
   on_boot:
     priority: -100
     then:
