@@ -68,11 +68,10 @@ spi:
 #                                       #
 #########################################
 canbus:
-  - platform: mcp2515
-    id: my_mcp2515
+  - id: !extend wp_can
+    platform: mcp2515
     spi_id: McpSpi
     cs_pin: GPIO12
-    can_id: 700
 
 #########################################
 #                                       #
