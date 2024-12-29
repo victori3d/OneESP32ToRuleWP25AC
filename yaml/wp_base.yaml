@@ -260,10 +260,6 @@ packages:
   RAUMSOLLTEMP_NACHT:             !include { file: wp_temperature.yaml, vars: { property: "RAUMSOLLTEMP_NACHT"       , target: "HK1" }}
   KUEHL_RAUMSOLL_TAG:             !include { file: wp_temperature.yaml, vars: { property: "KUEHL_RAUMSOLL_TAG"       , target: "HK1" }}
 
-  LUEFT_STUFE_TAG:                !include { file: wp_ventilation.yaml, vars: { property: "LUEFT_STUFE_TAG"   }}
-  LUEFT_STUFE_NACHT:              !include { file: wp_ventilation.yaml, vars: { property: "LUEFT_STUFE_NACHT" }}
-  LUEFT_STUFE_PARTY:              !include { file: wp_ventilation.yaml, vars: { property: "LUEFT_STUFE_PARTY" }}
-
   ABLUFTFEUCHTE:                  !include { file: wp_generic.yaml, vars: { property: "ABLUFTFEUCHTE"            , interval: $interval_very_slow, unit: "%", icon: "mdi:water-percent"}}
   MOTORSTROM:                     !include { file: wp_generic.yaml, vars: { property: "MOTORSTROM"               , interval: $interval_medium, unit: "A" }}
   MOTORSPANNUNG:                  !include { file: wp_generic.yaml, vars: { property: "MOTORSPANNUNG"            , interval: $interval_medium, unit: "V" }}
