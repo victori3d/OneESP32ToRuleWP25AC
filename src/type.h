@@ -15,6 +15,7 @@ enum Type : std::uint8_t {
     et_double_val,
     et_triple_val,
     et_little_endian,
+    et_wpstatus,
     et_betriebsart,
     et_zeit,
     et_datum,
