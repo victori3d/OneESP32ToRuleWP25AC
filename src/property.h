@@ -919,7 +919,6 @@ struct Property : public detail::Property {
     PROPERTY(FEHLERANZAHL, 0xfda8);
     PROPERTY(ANZEIGESTATUS, 0xfda9);
     PROPERTY(BUSKONTROLLE, 0xfdaa);
-    PROPERTY(ZWEITER_WE_STATUS, 0xfdab, Type::et_little_endian);
     PROPERTY(WP_EVU, 0xfdac, Type::et_little_endian);
     PROPERTY(WP_PUMPENSTATUS, 0xfdad, Type::et_little_endian);
     PROPERTY(WP_STATUS, 0xfdae, Type::et_little_endian);
@@ -932,7 +931,6 @@ struct Property : public detail::Property {
     PROPERTY(IMPULSRATE, 0xfdb6, Type::et_little_endian);
     PROPERTY(WAERMEMENGE, 0xfdb8, Type::et_little_endian);
     PROPERTY(AUTOMATIK_WARMWASSER, 0xfdb9, Type::et_little_bool);
-    PROPERTY(ZWEITER_WE_STATUS, 0xfdba);
     PROPERTY(WPSTUFEN_WW, 0xfdbb, Type::et_little_endian);
     PROPERTY(DYNAMIK, 0xfdbf, Type::et_little_endian);
     PROPERTY(PARTYSTUNDEN, 0xfdc0);
