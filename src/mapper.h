@@ -25,6 +25,8 @@ class Mapper {
 
     std::optional<std::uint16_t> getPassivkuehlungId(const std::string& passivkuehlung) const;
 
+    std::optional<std::uint16_t> getWpStatus(const std::string& wpStatus) const;
+
     static Mapper& instance() {
         static Mapper mapper;
         return mapper;
@@ -36,6 +38,7 @@ class Mapper {
     std::unordered_map<std::uint16_t, std::string> betriebsartMap;
     std::unordered_map<std::uint16_t, std::string> kuehlmodusMap;
     std::unordered_map<std::uint16_t, std::string> passivkuehlungMap;
+    std::unordered_map<std::uint16_t, std::string> wpStatusMap;
 };
 
 #endif
