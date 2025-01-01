@@ -53,7 +53,7 @@ class Mapper {
 struct Property : public detail::Property {
     constexpr Property(const Property& p) : detail::Property{p.name, p.id, p.type} {}
     constexpr Property(const detail::Property& p) : detail::Property{p.name, p.id, p.type} {}
-    Property(const std::uint16_t _id) : detail::Property{getProperty(_id)} {
+    Property(const std::uint16_t _id) : detail::Property{getProperty(_id)} {}
 
     PROPERTY(INDEX_NOT_FOUND, 0x0000);
     PROPERTY(FEHLERMELDUNG, 0x0001);
