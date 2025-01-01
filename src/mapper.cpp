@@ -59,6 +59,15 @@ std::optional<std::uint16_t> Mapper::getPassivkuehlungId(const std::string& pass
     return {};
 }
 
+std::optional<std::uint16_t> Mapper::getWPStatus(const std::string& wpStatus) const {
+    for (const auto& element : wpStatusMap) {
+        if (element.second == wpStatus) {
+            return element.first;
+        }
+    }
+    return {};
+}
+
 Mapper::Mapper() {
     errorMap = {{0x0002, "Schuetz klebt"},
                 {0x0003, "ERR HD-SENSOR"},
@@ -93,4 +102,17 @@ Mapper::Mapper() {
 
     passivkuehlungMap = {
         {0x0000, "Aus"}, {0x0001, "Ablüften"}, {0x0002, "Zulüften"}, {0x0003, "Bypass"}, {0x0004, "Sommerkassette"}};
+
+    wpStatusMap = {
+        { 0x0001, "Verdichter 1" },
+        { 0x0002, "DHC 1" }, 
+        { 0x0004, "DHC 2" },
+        { 0x0008, "Pufferladepumpe" },
+        { 0x0010, "Warmwasserladepumpe" },
+        { 0x0020, "HK 1 Pumpe" },
+        { 0x0080, "Mischer auf" },
+        { 0x0100, "EVU-Sperre" }, 
+        { 0x0200, "Quellenpumpe" },
+        { 0x0800, "Kuehlkreispumpe" }
+    };
 }
