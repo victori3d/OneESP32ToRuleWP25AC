@@ -40,7 +40,7 @@ SimpleVariant GetValueByType(const std::uint16_t value, const Type type) {
         case Type::et_bool:
             return (value == 0x0001) ? true : false;
         case Type::et_wpstatus: {
-            const auto result = Mapper::instance().getWpStatus(value);
+            const auto result = Mapper::instance().getWPStatus(value);
             if (result.has_value()) {
                 return result.value();
             } else {
