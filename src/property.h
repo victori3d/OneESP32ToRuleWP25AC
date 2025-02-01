@@ -143,7 +143,7 @@ struct Property : public detail::Property {
     PROPERTY(FEUCHTE, 0x0075, Type::et_dec_val);
     PROPERTY(PUFFERTEMP_OBEN1, 0x0076, Type::et_dec_val);
     PROPERTY(PUFFERTEMP_MITTE1, 0x0077, Type::et_dec_val);
-    PROPERTY(PUFFERTEMP_UNTEN1, 0x0078, Type::et_dec_val);
+    PROPERTY(PUFFERISTTEMP, 0x0078, Type::et_dec_val);
     PROPERTY(PUFFERTEMP_OBEN2, 0x0079, Type::et_dec_val);
     PROPERTY(PUFFERTEMP_MITTE2, 0x007a, Type::et_dec_val);
     PROPERTY(PUFFERTEMP_UNTEN2, 0x007b, Type::et_dec_val);
@@ -334,7 +334,7 @@ struct Property : public detail::Property {
     PROPERTY(PUMPENSTATUS, 0x01d2, Type::et_little_endian);
     PROPERTY(EVU, 0x01d3);
     PROPERTY(QUELLE_IST, 0x01d4, Type::et_dec_val);
-    PROPERTY(PUFFERSOLL, 0x01d5, Type::et_dec_val);
+    PROPERTY(PUFFERSOLLTEMP, 0x01d5, Type::et_dec_val);
     PROPERTY(WPVORLAUFIST, 0x01d6, Type::et_dec_val);
     PROPERTY(HILFSKESSELSOLL, 0x01d7, Type::et_dec_val);
     PROPERTY(FUEHLER_1, 0x01d8, Type::et_dec_val);
@@ -436,7 +436,7 @@ struct Property : public detail::Property {
     PROPERTY(FKT_MFR_HYSTERESE, 0x02a9);
     PROPERTY(BRENNER_INDEX, 0x02aa);
     PROPERTY(BRENNER_LEISTUNG, 0x02ab);
-    PROPERTY(BRENNER_STARTS, 0x02ac);
+    PROPERTY(HKISTTEMP, 0x02ca, Type::et_dec_val);
     PROPERTY(BRENNER_LAUFZEIT, 0x02bc);
     PROPERTY(ABGELAUFENE_WARTUNGSZEIT, 0x02bd);
     PROPERTY(PUMPENSTOPP_MIT_RAUMREGLER, 0x02be);
