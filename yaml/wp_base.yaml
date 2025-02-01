@@ -14,36 +14,6 @@ esphome:
           });
           queueRequest(Kessel, Property::kPASSIVKUEHLUNG);
 
-          CallbackHandler::instance().addCallback(std::make_pair(Kessel,Property::kZULUFT_IST),[](const SimpleVariant& value){
-            // workaround for broken ninth bit of BETRIEBSSTATUS
-            const auto zuluftIst = static_cast<std::uint16_t>(value);
-            id(LUEFTUNG).publish_state(zuluftIst > 0U);
-          });
-
-          CallbackHandler::instance().addCallbacks({std::make_pair(Kessel,Property::kABLUFT_SOLL),
-                                                    std::make_pair(Kessel,Property::kZULUFT_SOLL)},
-                                                    [](const SimpleVariant&) {
-            const auto airflowIn{id(ZULUFT_SOLL).state};
-            const auto airflowOut{id(ABLUFT_SOLL).state};
-            auto getPower = [](const float airflow){
-              if(airflow < 0.1f) {
-                return 0.0f;
-              }
-              /* This equation is base on the following measurement:
-               * airflow (l/min)       : 0 140 190 220 300
-               * combined fan power (W): 0  30  50  80 170
-               * @note: the last value is taken as from the THZ504 specification.
-               */
-              return (0.00005f * std::pow(airflow, 2.5f) + 3.0f);
-            };
-            id(FAN_POWER).publish_state(getPower(airflowIn) + getPower(airflowOut));
-          });
-
-          id(ELEKTRISCHE_NACHERWAERMUNG).add_on_state_callback([](const bool state){
-            const auto electricHeatingPower = state ? id(NE_STUFE_WW).state * 230.0 /*V*/ * 16.0 /*A*/ : 0.0f;
-            id(ELECTRIC_HEATING_POWER).publish_state(electricHeatingPower);
-          });
-
           CallbackHandler::instance().addCallback(std::make_pair(Kessel,Property::kPROGRAMMSCHALTER),[](const SimpleVariant& value){
             const auto stringValue{value.get<std::string>()};
             const auto index = id(PROGRAMMSCHALTER).index_of(stringValue);
