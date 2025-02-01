@@ -238,9 +238,9 @@ packages:
   ANZEIGE_NIEDERDRUCK:            !include { file: wp_generic.yaml, vars: { property: "ANZEIGE_NIEDERDRUCK"      , accuracy_decimals: "2" }}
   PUMPENZYKLEN_MIN_AUSSENT:       !include { file: wp_generic.yaml, vars: { property: "PUMPENZYKLEN_MIN_AUSSENT" }}
 
-  NE_STUFE_WW:                    !include { file: wp_number.yaml, vars: { property: "NE_STUFE_WW"                , min: "0", max: "3" }}
-  LEISTUNG_AUSLEGUNG_HEIZUNG:     !include { file: wp_number.yaml, vars: { property: "LEISTUNG_AUSLEGUNG_HEIZUNG" }}
-  LEISTUNG_AUSLEGUNG_KUEHLEN:     !include { file: wp_number.yaml, vars: { property: "LEISTUNG_AUSLEGUNG_KUEHLEN" }}
-  PUMPENDREHZAHL_HEIZEN:          !include { file: wp_number.yaml, vars: { property: "PUMPENDREHZAHL_HEIZEN"      , step: "0.1" }}
-  HYSTERESE_WW:                   !include { file: wp_number.yaml, vars: { property: "HYSTERESE_WW"               , min: "2.0", max: "10.0", step: "0.1", unit: "°C" }}
-  WAERMEERTRAG_RUECKGE_TAG_SUMME_KWH:  !include { file: wp_daily_energy_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_RUECKGE_TAG_SUMME_KWH" , property_wh: "WAERMEERTRAG_RUECKGE_TAG_WH"    , property_kwh: "WAERMEERTRAG_RUECKGE_TAG_KWH"     }}
+#  NE_STUFE_WW:                    !include { file: wp_number.yaml, vars: { property: "NE_STUFE_WW"                , min: "0", max: "3" }}
+#  LEISTUNG_AUSLEGUNG_HEIZUNG:     !include { file: wp_number.yaml, vars: { property: "LEISTUNG_AUSLEGUNG_HEIZUNG" }}
+#  LEISTUNG_AUSLEGUNG_KUEHLEN:     !include { file: wp_number.yaml, vars: { property: "LEISTUNG_AUSLEGUNG_KUEHLEN" }}
+#  PUMPENDREHZAHL_HEIZEN:          !include { file: wp_number.yaml, vars: { property: "PUMPENDREHZAHL_HEIZEN"      , step: "0.1" }}
+#  HYSTERESE_WW:                   !include { file: wp_number.yaml, vars: { property: "HYSTERESE_WW"               , min: "2.0", max: "10.0", step: "0.1", unit: "°C" }}
+#  WAERMEERTRAG_RUECKGE_TAG_SUMME_KWH:  !include { file: wp_daily_energy_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_RUECKGE_TAG_SUMME_KWH" , property_wh: "WAERMEERTRAG_RUECKGE_TAG_WH"    , property_kwh: "WAERMEERTRAG_RUECKGE_TAG_KWH"     }}
