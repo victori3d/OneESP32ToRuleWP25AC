@@ -113,6 +113,8 @@ packages:
 
   HEATPUMP_DATETIME: !include { file: wp_datetime.yaml }
 
+
+### ADDED FROM wp_base.yaml
   SCHALTPROGRAMM_AKTIV:       !include { file: wp_binary.yaml, vars: { name: "SCHALTPROGRAMM_AKTIV" }}
   VERDICHTER:                 !include { file: wp_binary.yaml, vars: { name: "VERDICHTER" }}
   WARMWASSERBEREITUNG:        !include { file: wp_binary.yaml, vars: { name: "WARMWASSERBEREITUNG" }}
