@@ -113,6 +113,50 @@ packages:
 
   HEATPUMP_DATETIME: !include { file: wp_datetime.yaml }
 
+  SCHALTPROGRAMM_AKTIV:       !include { file: wp_binary.yaml, vars: { name: "SCHALTPROGRAMM_AKTIV" }}
+  VERDICHTER:                 !include { file: wp_binary.yaml, vars: { name: "VERDICHTER" }}
+  WARMWASSERBEREITUNG:        !include { file: wp_binary.yaml, vars: { name: "WARMWASSERBEREITUNG" }}
+  ELEKTRISCHE_NACHERWAERMUNG: !include { file: wp_binary.yaml, vars: { name: "ELEKTRISCHE_NACHERWAERMUNG" }}
+  SERVICE:                    !include { file: wp_binary.yaml, vars: { name: "SERVICE" }}
+  HEIZEN:                     !include { file: wp_binary.yaml, vars: { name: "HEIZEN" }}
+  KUEHLEN:                    !include { file: wp_binary.yaml, vars: { name: "KUEHLEN" }}
+  LUEFTUNG:                   !include { file: wp_binary.yaml, vars: { name: "LUEFTUNG" }}
+  EVU_SPERRE:                 !include { file: wp_binary.yaml, vars: { name: "EVU_SPERRE" }}
+  FILTERWECHSEL_BEIDE:        !include { file: wp_binary.yaml, vars: { name: "FILTERWECHSEL_BEIDE" }}
+  HEIZKREISPUMPE:             !include { file: wp_binary.yaml, vars: { name: "HEIZKREISPUMPE" }}
+  ABTAUEN_VERDAMPFER:         !include { file: wp_binary.yaml, vars: { name: "ABTAUEN_VERDAMPFER" }}
+  FILTERWECHSEL_ABLUFT:       !include { file: wp_binary.yaml, vars: { name: "FILTERWECHSEL_ABLUFT" }}
+  FILTERWECHSEL_ZULUFT:       !include { file: wp_binary.yaml, vars: { name: "FILTERWECHSEL_ZULUFT" }}
+  AUFHEIZPROGRAMM_AKTIV:      !include { file: wp_binary.yaml, vars: { name: "AUFHEIZPROGRAMM_AKTIV" }}
+  SOMMERBETRIEB_AKTIV:        !include { file: wp_binary.yaml, vars: { name: "SOMMERBETRIEB_AKTIV" }}
+  OFEN_KAMIN_AKTIV:           !include { file: wp_binary.yaml, vars: { name: "OFEN_KAMIN_AKTIV" }}
+
+  WAERMEERTRAG_RUECKGE_SUMME_MWH:  !include { file: wp_generic_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_RUECKGE_SUMME_MWH"     , scaled_property: "WAERMEERTRAG_RUECKGE_SUM_KWH" , property: "WAERMEERTRAG_RUECKGE_SUM_MWH" , unit: "MWh", accuracy_decimals: "3", icon: "mdi:fire"  }}
+
+  ABLUFTTEMP:                     !include { file: wp_temperature.yaml, vars: { property: "ABLUFTTEMP"                }}
+  EINSTELL_SPEICHERSOLLTEMP:      !include { file: wp_temperature.yaml, vars: { property: "EINSTELL_SPEICHERSOLLTEMP" }}
+  SAMMLERISTTEMP:                 !include { file: wp_temperature.yaml, vars: { property: "SAMMLERISTTEMP"           , interval: $interval_medium }}
+  TAUPUNKT_HK1:                   !include { file: wp_temperature.yaml, vars: { property: "TAUPUNKT_HK1"             , target: "HK1" }}
+#  TAUPUNKT_HK2:                   !include { file: wp_temperature.yaml, vars: { property: "TAUPUNKT_HK2"             , target: "HK2" }}   #Added 29.12.2024 needs to be tested
+  RAUMSOLLTEMP_I:                 !include { file: wp_temperature.yaml, vars: { property: "RAUMSOLLTEMP_I"           , target: "HK1" }}
+  RAUMSOLLTEMP_NACHT:             !include { file: wp_temperature.yaml, vars: { property: "RAUMSOLLTEMP_NACHT"       , target: "HK1" }}
+  KUEHL_RAUMSOLL_TAG:             !include { file: wp_temperature.yaml, vars: { property: "KUEHL_RAUMSOLL_TAG"       , target: "HK1" }}
+
+#  VERDICHTERDREHZAHL:             !include { file: wp_generic.yaml, vars: { property: "VERDICHTERDREHZAHL"       , interval: $interval_medium, unit: "Hz"   , icon: "mdi:gauge" }}
+  HEIZLEISTUNG_RELATIV:           !include { file: wp_generic.yaml, vars: { property: "HEIZLEISTUNG_RELATIV"     , interval: $interval_medium, unit: "%"    , icon: "mdi:gauge" }}
+#  HEIZ_KUEHL_LEISTUNG:            !include { file: wp_generic.yaml, vars: { property: "HEIZ_KUEHL_LEISTUNG"      , interval: $interval_medium, unit: "kW", accuracy_decimals: "2" }}
+  VOLUMENSTROM:                   !include { file: wp_generic.yaml, vars: { property: "VOLUMENSTROM"             , interval: $interval_slow  , unit: "l/min", icon: "mdi:pump"  }}
+  LAUFZEIT_FILTER:                !include { file: wp_generic.yaml, vars: { property: "LAUFZEIT_FILTER"          , interval: $interval_once_in_a_while , unit: "%", icon: "mdi:calendar"  }}
+  ANZEIGE_NIEDERDRUCK:            !include { file: wp_generic.yaml, vars: { property: "ANZEIGE_NIEDERDRUCK"      , accuracy_decimals: "2" }}
+  PUMPENZYKLEN_MIN_AUSSENT:       !include { file: wp_generic.yaml, vars: { property: "PUMPENZYKLEN_MIN_AUSSENT" }}
+
+#  NE_STUFE_WW:                    !include { file: wp_number.yaml, vars: { property: "NE_STUFE_WW"                , min: "0", max: "3" }}
+#  LEISTUNG_AUSLEGUNG_HEIZUNG:     !include { file: wp_number.yaml, vars: { property: "LEISTUNG_AUSLEGUNG_HEIZUNG" }}
+#  LEISTUNG_AUSLEGUNG_KUEHLEN:     !include { file: wp_number.yaml, vars: { property: "LEISTUNG_AUSLEGUNG_KUEHLEN" }}
+#  PUMPENDREHZAHL_HEIZEN:          !include { file: wp_number.yaml, vars: { property: "PUMPENDREHZAHL_HEIZEN"      , step: "0.1" }}
+#  HYSTERESE_WW:                   !include { file: wp_number.yaml, vars: { property: "HYSTERESE_WW"               , min: "2.0", max: "10.0", step: "0.1", unit: "°C" }}
+  WAERMEERTRAG_RUECKGE_TAG_SUMME_KWH:  !include { file: wp_daily_energy_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_RUECKGE_TAG_SUMME_KWH" , property_wh: "WAERMEERTRAG_RUECKGE_TAG_WH"    , property_kwh: "WAERMEERTRAG_RUECKGE_TAG_KWH"     }}  
+
 #########################################
 #                                       #
 #   Home Assistant Sensors              #
