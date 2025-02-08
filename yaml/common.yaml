@@ -23,6 +23,7 @@ substitutions:
   hk1_can_id: "0x301" #"0x601"
   hk2_can_id: "0x302" #"0x602"
   manager_can_id: "0x480" #"0x514"
+  heizmodul_can_id: "0x500" #Needs to be defined
   espclient_can_id: "0x700" #"0x6a2"
 
 #########################################
