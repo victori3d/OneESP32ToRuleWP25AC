@@ -1,0 +1,28 @@
+# Test-Konfiguration für WPL 25AC Register-Identifikation
+esphome:
+  on_boot:
+    priority: -100
+    then:
+      - lambda: |-
+          // Test: Bekannte Register der Reihe nach abfragen
+          ESP_LOGI("TEST", "=== WPL 25AC Register-Test gestartet ===");
+          
+          // Temperaturen testen
+          queueRequest(Kessel, Property::kAUSSENTEMP);       // 0x000C
+          queueRequest(Kessel, Property::kSPEICHERISTTEMP);  // 0x000E
+          queueRequest(Kessel, Property::kVORLAUFISTTEMP);   // 0x000F
+          queueRequest(Kessel, Property::kRUECKLAUFISTTEMP); // 0x0016
+          queueRequest(Kessel, Property::kPUFFERISTTEMP);    // 0x0078
+          queueRequest(Kessel, Property::kPUFFERSOLLTEMP);   // 0x01D5
+          queueRequest(Kessel, Property::kHKISTTEMP);        // 0x02CA
+          
+          ESP_LOGI("TEST", "=== Register-Requests gesendet ===");
+
+interval:
+  - interval: 30s
+    then:
+      - lambda: |-
+          ESP_LOGI("TEST", "--- Zyklische Abfrage ---");
+          queueRequest(Kessel, Property::kAUSSENTEMP);
+          queueRequest(Kessel, Property::kVORLAUFISTTEMP);
+          queueRequest(Kessel, Property::kSPEICHERISTTEMP);
