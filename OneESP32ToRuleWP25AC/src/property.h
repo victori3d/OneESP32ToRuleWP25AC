@@ -336,7 +336,7 @@ struct Property : public detail::Property {
     PROPERTY(QUELLE_IST, 0x01d4, Type::et_dec_val);
     PROPERTY(PUFFERSOLLTEMP, 0x01d5, Type::et_dec_val);
     PROPERTY(WPVORLAUFIST, 0x01d6, Type::et_dec_val);
-    PROPERTY(HILFSKESSELSOLL, 0x01d7, Type::et_dec_val);
+    PROPERTY(HILFSKESSELSOLL, 0x01d7, Type::et_dec_val);//Working
     PROPERTY(FUEHLER_1, 0x01d8, Type::et_dec_val);
     PROPERTY(FUEHLER_2, 0x01d9, Type::et_dec_val);
     PROPERTY(VOLUMENSTROM, 0x01da);
