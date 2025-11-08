@@ -66,17 +66,17 @@ struct Property : public detail::Property {
     PROPERTY(UHRZEIT, 0x0009, Type::et_zeit);
     PROPERTY(DATUM, 0x000a, Type::et_datum);
     PROPERTY(GERAETE_ID, 0x000b, Type::et_dev_id);
-    PROPERTY(AUSSENTEMP, 0x000c, Type::et_dec_val);
+    PROPERTY(AUSSENTEMP, 0x000c, Type::et_dec_val); //Working
     PROPERTY(SAMMLERISTTEMP, 0x000d, Type::et_dec_val);
-    PROPERTY(SPEICHERISTTEMP, 0x000e, Type::et_dec_val);
-    PROPERTY(VORLAUFISTTEMP, 0x000f, Type::et_dec_val);
+    PROPERTY(SPEICHERISTTEMP, 0x000e, Type::et_dec_val);//Working
+    PROPERTY(VORLAUFISTTEMP, 0x000f, Type::et_dec_val);//Working
     PROPERTY(GERAETEKONFIGURATION, 0x0010);
     PROPERTY(RAUMISTTEMP, 0x0011, Type::et_dec_val);
     PROPERTY(VERSTELLTE_RAUMSOLLTEMP, 0x0012, Type::et_dec_val);
     PROPERTY(EINSTELL_SPEICHERSOLLTEMP, 0x0013, Type::et_dec_val);
     PROPERTY(VERDAMPFERTEMP, 0x0014, Type::et_byte);
     PROPERTY(SAMMLERSOLLTEMP, 0x0015, Type::et_dec_val);
-    PROPERTY(RUECKLAUFISTTEMP, 0x0016, Type::et_dec_val);
+    PROPERTY(RUECKLAUFISTTEMP, 0x0016, Type::et_dec_val);//Working
     PROPERTY(SPEICHER_UNTEN_TEMP, 0x0017, Type::et_dec_val);
     PROPERTY(SPEICHER_OBEN_TEMP, 0x0019, Type::et_dec_val);
     PROPERTY(KUNDENKENNUNG, 0x001a);

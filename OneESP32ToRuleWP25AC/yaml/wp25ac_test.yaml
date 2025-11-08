@@ -1,125 +1,168 @@
-# Erweiterte Test-Konfiguration für WPL 25AC Register-Mapping
-# Basierend auf WPM3-Anzeige vom 2025-11-08
+# Test-Konfiguration für WPL 25AC Register-Identifikation (KORRIGIERT)
+# Version: 2.1
+# Datum: 2025-11-08
+#
+# ÄNDERUNGEN v2.1:
+# - YAML-Syntax-Fehler behoben (doppelte esphome:-Blöcke zusammengeführt)
+# - Alle on_boot-Aktionen in einem Block
 #
 # ANLEITUNG:
-# 1. Diese Datei als wp25ac_test.yaml im yaml-Ordner speichern
-# 2. ESPHome kompilieren und flashen
-# 3. Log beobachten (esphome logs heatingpump-esp.yaml)
-# 4. Werte mit WPM3-Anzeige vergleichen
-#
-# ERWARTETE WERTE (WPM3):
-# - Außentemperatur: 5.9 °C
-# - Vorlauf-Ist: 41.7 °C
-# - Rücklauf-Ist: 35.7 °C
-# - WW-Ist: 49.0 °C
-# - WW-Soll: 50.0 °C
-# - Puffer-Ist: 35.7 °C
-# - Puffer-Soll: 33.7 °C
-# - HK1-Ist: 35.9 °C
-# - HK1-Soll: 33.7 °C
-# - HK2-Ist: 25.4 °C
-# - HK2-Soll: 26.7 °C
+# 1. Diese Datei als wp25ac_test.yaml speichern
+# 2. In wp25ac.yaml einbinden: packages: TEST: !include { file: wp25ac_test.yaml }
+# 3. ESPHome kompilieren: esphome run heatingpump-esp.yaml
+# 4. Log analysieren: esphome logs heatingpump-esp.yaml | grep "TEST"
 
+# =============================================================================
+# GLOBALER ESPHOME-BLOCK (ZUSAMMENGEFÜHRT)
+# =============================================================================
 esphome:
   on_boot:
-    priority: -100
-    then:
-      - lambda: |-
-          ESP_LOGI("TEST", "==============================================");
-          ESP_LOGI("TEST", "WPL 25AC Register-Mapping Test v2.0");
-          ESP_LOGI("TEST", "==============================================");
-          
-          // ========================================
-          // BLOCK 1: TEMPERATUREN (bereits bekannt)
-          // ========================================
-          ESP_LOGI("TEST", "--- BLOCK 1: Bekannte Temperaturen ---");
-          
-          queueRequest(Kessel, Property::kAUSSENTEMP);        // 0x000C → Erwartet: 5.9°C
-          queueRequest(Kessel, Property::kVORLAUFISTTEMP);    // 0x000F → Erwartet: 41.7°C
-          queueRequest(Kessel, Property::kRUECKLAUFISTTEMP);  // 0x0016 → Erwartet: 35.7°C
-          queueRequest(Kessel, Property::kSPEICHERISTTEMP);   // 0x000E → Erwartet: 49.0°C
-          queueRequest(Kessel, Property::kSPEICHERSOLLTEMP);  // 0x0002 → Erwartet: 50.0°C
-          
-          // ========================================
-          // BLOCK 2: PUFFER-TEMPERATUREN
-          // ========================================
-          ESP_LOGI("TEST", "--- BLOCK 2: Puffer-Temperaturen ---");
-          
-          queueRequest(Kessel, Property::kPUFFERISTTEMP);     // 0x0078 → Erwartet: 35.7°C
-          queueRequest(Kessel, Property::kPUFFERSOLLTEMP);    // 0x01D5 → Erwartet: 33.7°C
-          
-          // Alternative Puffer-Sensoren testen
-          queueRequest(Kessel, Property::kPUFFERTEMP_OBEN1);  // 0x0076
-          queueRequest(Kessel, Property::kPUFFERTEMP_MITTE1); // 0x0077
-          
-          // ========================================
-          // BLOCK 3: HEIZKREIS 1 (HK1)
-          // ========================================
-          ESP_LOGI("TEST", "--- BLOCK 3: Heizkreis 1 ---");
-          
-          queueRequest(HK1, Property::kHKISTTEMP);            // 0x02CA → Erwartet: 35.9°C
-          queueRequest(HK1, Property::kVORLAUFSOLLTEMP);      // 0x0004 → Erwartet: 33.7°C
-          queueRequest(HK1, Property::kRAUMISTTEMP);          // 0x0011
-          queueRequest(HK1, Property::kVERSTELLTE_RAUMSOLLTEMP); // 0x0012
-          
-          // ========================================
-          // BLOCK 4: HEIZKREIS 2 (HK2)
-          // ========================================
-          ESP_LOGI("TEST", "--- BLOCK 4: Heizkreis 2 ---");
-          
-          // WICHTIG: HK2 nutzt vermutlich EIGENE CAN-ID!
-          queueRequest(HK2, Property::kHKISTTEMP);            // → Erwartet: 25.4°C
-          queueRequest(HK2, Property::kVORLAUFSOLLTEMP);      // → Erwartet: 26.7°C
-          queueRequest(HK2, Property::kRAUMSOLLTEMP_II);      // 0x0006
-          queueRequest(HK2, Property::kRAUMISTTEMP);          // 0x0011
-          
-          // Alternative: Solltemperaturen im Kessel
-          queueRequest(Kessel, Property::kRAUMSOLLTEMP_I);    // 0x0005
-          queueRequest(Kessel, Property::kRAUMSOLLTEMP_II);   // 0x0006
-          
-          // ========================================
-          // BLOCK 5: ELEKTRISCHE NACHERWÄRMUNG
-          // ========================================
-          ESP_LOGI("TEST", "--- BLOCK 5: Nacherwärmung ---");
-          
-          queueRequest(Kessel, Property::kBIVALENTPARALLELTEMPERATUR_HZG);  // 0x01AC → -7.0°C
-          queueRequest(Kessel, Property::kBIVALENZALTERNATIVTEMPERATUR_HZG); // 0x01AE → -20.0°C
-          queueRequest(Kessel, Property::kBIVALENTPARALLELTEMPERATUR_WW);   // 0x01AD → -7.0°C
-          queueRequest(Kessel, Property::kBIVALENZALTERNATIVTEMPERATUR_WW);  // 0x01AF → -20.0°C
-          
-          // ========================================
-          // BLOCK 6: STATUS-REGISTER
-          // ========================================
-          ESP_LOGI("TEST", "--- BLOCK 6: Status-Bits ---");
-          
-          queueRequest(Kessel, Property::kWAERMEPUMPEN_STATUS);      // 0x0062
-          queueRequest(Kessel, Property::kBETRIEBS_STATUS);          // 0x0176
-          queueRequest(Kessel, Property::kBETRIEBS_STATUS_2);        // 0xC356
-          queueRequest(Kessel, Property::kHEIZKREIS_STATUS);         // 0x0059
-          
-          // ========================================
-          // BLOCK 7: WÄRMEPUMPEN-PARAMETER
-          // ========================================
-          ESP_LOGI("TEST", "--- BLOCK 7: WP-Parameter ---");
-          
-          queueRequest(Kessel, Property::kSOLLWERT_UEBERHITZUNG);    // 0x07F3 → 6.4°C
-          queueRequest(Kessel, Property::kISTWERT_UEBERHITZUNG_VERDAMPFER); // 0x07F4 → 21.7°C
-          queueRequest(Kessel, Property::kREGELABWEICHUNG);          // 0x033E → 15.3K
-          queueRequest(Kessel, Property::kEXV_OEFFNUNGSGRAD);        // 0x07CA → 0.0%
-          
-          // ========================================
-          // BLOCK 8: HEIZKURVEN-PARAMETER
-          // ========================================
-          ESP_LOGI("TEST", "--- BLOCK 8: Heizkurve ---");
-          
-          queueRequest(HK1, Property::kHEIZKURVE);                   // 0x010E
-          queueRequest(HK2, Property::kHEIZKURVE);                   // Steigung 0.40
-          
-          ESP_LOGI("TEST", "==============================================");
-          ESP_LOGI("TEST", "Alle Test-Requests gesendet!");
-          ESP_LOGI("TEST", "==============================================");
+    # Priorität -100: Nach allen anderen Komponenten
+    - priority: -100
+      then:
+        - lambda: |-
+            ESP_LOGI("TEST", "==============================================");
+            ESP_LOGI("TEST", "WPL 25AC Register-Mapping Test v2.1");
+            ESP_LOGI("TEST", "==============================================");
+            
+            // ========================================
+            // BLOCK 1: TEMPERATUREN (bereits bekannt)
+            // ========================================
+            ESP_LOGI("TEST", "--- BLOCK 1: Bekannte Temperaturen ---");
+            
+            queueRequest(Kessel, Property::kAUSSENTEMP);        // 0x000C → Erwartet: 5.9°C
+            queueRequest(Kessel, Property::kVORLAUFISTTEMP);    // 0x000F → Erwartet: 41.7°C
+            queueRequest(Kessel, Property::kRUECKLAUFISTTEMP);  // 0x0016 → Erwartet: 35.7°C
+            queueRequest(Kessel, Property::kSPEICHERISTTEMP);   // 0x000E → Erwartet: 49.0°C
+            queueRequest(Kessel, Property::kSPEICHERSOLLTEMP);  // 0x0002 → Erwartet: 50.0°C
+            
+            // ========================================
+            // BLOCK 2: PUFFER-TEMPERATUREN
+            // ========================================
+            ESP_LOGI("TEST", "--- BLOCK 2: Puffer-Temperaturen ---");
+            
+            queueRequest(Kessel, Property::kPUFFERISTTEMP);     // 0x0078 → Erwartet: 35.7°C
+            queueRequest(Kessel, Property::kPUFFERSOLLTEMP);    // 0x01D5 → Erwartet: 33.7°C
+            
+            // Alternative Puffer-Sensoren testen
+            queueRequest(Kessel, Property::kPUFFERTEMP_OBEN1);  // 0x0076
+            queueRequest(Kessel, Property::kPUFFERTEMP_MITTE1); // 0x0077
+            
+            // ========================================
+            // BLOCK 3: HEIZKREIS 1 (HK1)
+            // ========================================
+            ESP_LOGI("TEST", "--- BLOCK 3: Heizkreis 1 ---");
+            
+            queueRequest(HK1, Property::kHKISTTEMP);            // 0x02CA → Erwartet: 35.9°C
+            queueRequest(HK1, Property::kVORLAUFSOLLTEMP);      // 0x0004 → Erwartet: 33.7°C
+            queueRequest(HK1, Property::kRAUMISTTEMP);          // 0x0011
+            queueRequest(HK1, Property::kVERSTELLTE_RAUMSOLLTEMP); // 0x0012
+            
+            // ========================================
+            // BLOCK 4: HEIZKREIS 2 (HK2)
+            // ========================================
+            ESP_LOGI("TEST", "--- BLOCK 4: Heizkreis 2 ---");
+            
+            // WICHTIG: HK2 nutzt vermutlich EIGENE CAN-ID!
+            queueRequest(HK2, Property::kHKISTTEMP);            // → Erwartet: 25.4°C
+            queueRequest(HK2, Property::kVORLAUFSOLLTEMP);      // → Erwartet: 26.7°C
+            queueRequest(HK2, Property::kRAUMSOLLTEMP_II);      // 0x0006
+            queueRequest(HK2, Property::kRAUMISTTEMP);          // 0x0011
+            
+            // Alternative: Solltemperaturen im Kessel
+            queueRequest(Kessel, Property::kRAUMSOLLTEMP_I);    // 0x0005
+            queueRequest(Kessel, Property::kRAUMSOLLTEMP_II);   // 0x0006
+            
+            // ========================================
+            // BLOCK 5: ELEKTRISCHE NACHERWÄRMUNG
+            // ========================================
+            ESP_LOGI("TEST", "--- BLOCK 5: Nacherwärmung ---");
+            
+            queueRequest(Kessel, Property::kBIVALENTPARALLELTEMPERATUR_HZG);  // 0x01AC → -7.0°C
+            queueRequest(Kessel, Property::kBIVALENZALTERNATIVTEMPERATUR_HZG); // 0x01AE → -20.0°C
+            queueRequest(Kessel, Property::kBIVALENTPARALLELTEMPERATUR_WW);   // 0x01AD → -7.0°C
+            queueRequest(Kessel, Property::kBIVALENZALTERNATIVTEMPERATUR_WW);  // 0x01AF → -20.0°C
+            
+            // ========================================
+            // BLOCK 6: STATUS-REGISTER
+            // ========================================
+            ESP_LOGI("TEST", "--- BLOCK 6: Status-Bits ---");
+            
+            queueRequest(Kessel, Property::kWAERMEPUMPEN_STATUS);      // 0x0062
+            queueRequest(Kessel, Property::kBETRIEBS_STATUS);          // 0x0176
+            queueRequest(Kessel, Property::kBETRIEBS_STATUS_2);        // 0xC356
+            queueRequest(Kessel, Property::kHEIZKREIS_STATUS);         // 0x0059
+            
+            // ========================================
+            // BLOCK 7: WÄRMEPUMPEN-PARAMETER
+            // ========================================
+            ESP_LOGI("TEST", "--- BLOCK 7: WP-Parameter ---");
+            
+            queueRequest(Kessel, Property::kSOLLWERT_UEBERHITZUNG);    // 0x07F3 → 6.4°C
+            queueRequest(Kessel, Property::kISTWERT_UEBERHITZUNG_VERDAMPFER); // 0x07F4 → 21.7°C
+            queueRequest(Kessel, Property::kREGELABWEICHUNG);          // 0x033E → 15.3K
+            queueRequest(Kessel, Property::kEXV_OEFFNUNGSGRAD);        // 0x07CA → 0.0%
+            
+            // ========================================
+            // BLOCK 8: HEIZKURVEN-PARAMETER
+            // ========================================
+            ESP_LOGI("TEST", "--- BLOCK 8: Heizkurve ---");
+            
+            queueRequest(HK1, Property::kHEIZKURVE);                   // 0x010E
+            queueRequest(HK2, Property::kHEIZKURVE);                   // Steigung 0.40
+            
+            ESP_LOGI("TEST", "==============================================");
+            ESP_LOGI("TEST", "Alle Test-Requests gesendet!");
+            ESP_LOGI("TEST", "==============================================");
+    
+    # Priorität -99: Nach Test-Requests, für Callbacks
+    - priority: -99
+      then:
+        - lambda: |-
+            ESP_LOGI("TEST", "Registriere Test-Callbacks...");
+            
+            // Test-Callbacks für die wichtigsten Sensoren
+            CallbackHandler::instance().addCallback(
+              std::make_pair(Kessel, Property::kAUSSENTEMP),
+              [](const SimpleVariant& value) {
+                float temp = value.get<float>();
+                id(test_aussentemp).publish_state(temp);
+                ESP_LOGI("TEST-RESULT", "✓ AUSSENTEMP: %.1f°C (erwartet: 5.9°C)", temp);
+              }
+            );
+            
+            CallbackHandler::instance().addCallback(
+              std::make_pair(Kessel, Property::kSPEICHERISTTEMP),
+              [](const SimpleVariant& value) {
+                float temp = value.get<float>();
+                id(test_ww_ist).publish_state(temp);
+                ESP_LOGI("TEST-RESULT", "✓ WW-IST: %.1f°C (erwartet: 49.0°C)", temp);
+              }
+            );
+            
+            CallbackHandler::instance().addCallback(
+              std::make_pair(HK1, Property::kHKISTTEMP),
+              [](const SimpleVariant& value) {
+                float temp = value.get<float>();
+                id(test_hk1_ist).publish_state(temp);
+                ESP_LOGI("TEST-RESULT", "✓ HK1-IST: %.1f°C (erwartet: 35.9°C)", temp);
+              }
+            );
+            
+            CallbackHandler::instance().addCallback(
+              std::make_pair(HK2, Property::kHKISTTEMP),
+              [](const SimpleVariant& value) {
+                float temp = value.get<float>();
+                id(test_hk2_ist).publish_state(temp);
+                ESP_LOGI("TEST-RESULT", "✓ HK2-IST: %.1f°C (erwartet: 25.4°C)", temp);
+              }
+            );
+            
+            ESP_LOGI("TEST", "Callbacks registriert!");
 
-# Zyklische Abfrage alle 30 Sekunden
+# =============================================================================
+# ZYKLISCHE ABFRAGEN
+# =============================================================================
 interval:
   - interval: 30s
     then:
@@ -134,7 +177,9 @@ interval:
           queueRequest(HK2, Property::kHKISTTEMP);
           queueRequest(Kessel, Property::kWAERMEPUMPEN_STATUS);
 
-# Debug-Sensoren für Vergleich
+# =============================================================================
+# DEBUG-SENSOREN
+# =============================================================================
 sensor:
   - platform: template
     name: "TEST - AUSSENTEMP"
@@ -163,66 +208,3 @@ sensor:
     unit_of_measurement: "°C"
     accuracy_decimals: 1
     internal: true
-
-# Callback-Handler für Test-Sensoren
-esphome:
-  on_boot:
-    priority: -99
-    then:
-      - lambda: |-
-          // Test-Callbacks registrieren
-          CallbackHandler::instance().addCallback(
-            std::make_pair(Kessel, Property::kAUSSENTEMP),
-            [](const SimpleVariant& value) {
-              float temp = value.get<float>();
-              id(test_aussentemp).publish_state(temp);
-              ESP_LOGI("TEST-RESULT", "✓ AUSSENTEMP: %.1f°C (erwartet: 5.9°C)", temp);
-            }
-          );
-          
-          CallbackHandler::instance().addCallback(
-            std::make_pair(Kessel, Property::kSPEICHERISTTEMP),
-            [](const SimpleVariant& value) {
-              float temp = value.get<float>();
-              id(test_ww_ist).publish_state(temp);
-              ESP_LOGI("TEST-RESULT", "✓ WW-IST: %.1f°C (erwartet: 49.0°C)", temp);
-            }
-          );
-          
-          CallbackHandler::instance().addCallback(
-            std::make_pair(HK1, Property::kHKISTTEMP),
-            [](const SimpleVariant& value) {
-              float temp = value.get<float>();
-              id(test_hk1_ist).publish_state(temp);
-              ESP_LOGI("TEST-RESULT", "✓ HK1-IST: %.1f°C (erwartet: 35.9°C)", temp);
-            }
-          );
-          
-          CallbackHandler::instance().addCallback(
-            std::make_pair(HK2, Property::kHKISTTEMP),
-            [](const SimpleVariant& value) {
-              float temp = value.get<float>();
-              id(test_hk2_ist).publish_state(temp);
-              ESP_LOGI("TEST-RESULT", "✓ HK2-IST: %.1f°C (erwartet: 25.4°C)", temp);
-            }
-          );
-          
-          ESP_LOGI("TEST", "Callbacks registriert!");
-
-# Erweiterte CAN-Bus Logging
-canbus:
-  - id: wp_can
-    on_frame:
-      - can_id: 0
-        can_id_mask: 0
-        then:
-          - lambda: |-
-              // Detailliertes Logging JEDER CAN-Nachricht
-              std::string data_hex = "";
-              for (auto byte : x) {
-                char buf[4];
-                sprintf(buf, "%02X ", byte);
-                data_hex += buf;
-              }
-              
-              ESP_LOGD("CAN-RAW", "ID: 0x%04lX | Data: %s", can_id, data_hex.c_str());
