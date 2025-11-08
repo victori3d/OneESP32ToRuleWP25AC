@@ -1,7 +1,9 @@
-esphome:
-  platformio_options:
-    build_flags:
-      - "-DWP25AC"
+# OneESP32ToRuleWP25AC/yaml/wp25ac.yaml
+# esphome:
+#   name: dummy
+#   platformio_options:
+#     build_flags:
+#       - "-DWP25AC"
 
 packages:
   COMMON: !include { file: common.yaml}
