@@ -40,13 +40,11 @@ SimpleVariant GetValueByType(const std::uint16_t value, const Type type) {
         case Type::et_bool:
             return (value == 0x0001) ? true : false;
         case Type::et_wpstatus: {
-            const auto result = Mapper::instance().getWPStatus(value);
-            if (result.has_value()) {
-                return result.value();
-            } else {
-                return std::string("Unknown");
-            }
-        }    
+                // WP Status ist ein Bitfeld - einfach als Zahl zurückgeben
+                // Die Bits werden in wp_base.yaml einzeln ausgewertet
+                return static_cast<float>(value);
+        }
+    
         case Type::et_betriebsart: {
             const auto result = Mapper::instance().getBetriebsart(value);
             if (result.has_value()) {

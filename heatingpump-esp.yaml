@@ -37,7 +37,7 @@ esp32:
 #  Logging - Detaillierte Ausgaben für Debugging
 ################################################################################
 logger:
-  level: INFO  # Für Produktion: INFO, für Debug: DEBUG
+  level: VERBOSE  # Für Produktion: INFO, für Debug: DEBUG
   baud_rate: 115200
   # Spezifische Log-Level für Komponenten
   logs:
@@ -71,13 +71,14 @@ api:
 #  OTA Updates (Over-The-Air)
 ################################################################################
 ota:
-  platform: esphome
-  password: !secret ota_password
-  # Safe-Mode bei fehlgeschlagenen Updates
-  safe_mode: true
-  # Reboot-Timeout
-  reboot_timeout: 10min
+  - platform: esphome
+    password: !secret ota_password
 
+# Safe Mode Component (optional, aber empfohlen)
+safe_mode:
+  # Aktiviert sich automatisch nach fehlgeschlagenen Updates
+  # Nach 10 Minuten im Safe Mode kann erneut geflasht werden
+  
 ################################################################################
 #  WLAN Konfiguration
 ################################################################################

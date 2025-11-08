@@ -1,6 +1,6 @@
 esphome:
-  includes:
-    - OneESP32ToRuleWP25AC/src/custom_climate.h
+  # includes:
+  #   - OneESP32ToRuleWP25AC/src/custom_climate.h
   on_boot:
     priority: -100
     then:
@@ -141,48 +141,48 @@ sensor:
 #   Custom climates                     #
 #                                       #
 #########################################
-climate:
-  - platform: custom
-    lambda: |-
-      auto heating = new HeatingDayNight(id(RAUMISTTEMP),id(RAUMSOLLTEMP_I), id(HEIZEN), id(KUEHLEN), id(LUEFTUNG), Property::kRAUMSOLLTEMP_I, Property::kKUEHL_RAUMSOLL_TAG);
-      App.register_component(heating);
-      return {heating};
-    climates:
-      name: "Heating Day"
-      visual:
-        min_temperature: 10.0
-        max_temperature: 25.0
-        temperature_step:
-          target_temperature: 0.1
-          current_temperature: 0.1
+# climate:
+#   - platform: custom
+#     lambda: |-
+#       auto heating = new HeatingDayNight(id(RAUMISTTEMP),id(RAUMSOLLTEMP_I), id(HEIZEN), id(KUEHLEN), id(LUEFTUNG), Property::kRAUMSOLLTEMP_I, Property::kKUEHL_RAUMSOLL_TAG);
+#       App.register_component(heating);
+#       return {heating};
+#     climates:
+#       name: "Heating Day"
+#       visual:
+#         min_temperature: 10.0
+#         max_temperature: 25.0
+#         temperature_step:
+#           target_temperature: 0.1
+#           current_temperature: 0.1
 
-  - platform: custom
-    lambda: |-
-      auto heating = new HeatingDayNight(id(RAUMISTTEMP),id(RAUMSOLLTEMP_NACHT), id(HEIZEN), id(KUEHLEN), id(LUEFTUNG), Property::kRAUMSOLLTEMP_NACHT, Property::kKUEHL_RAUMSOLL_NACHT);
-      App.register_component(heating);
-      return {heating};
-    climates:
-      name: "Heating Night"
-      visual:
-        min_temperature: 10.0
-        max_temperature: 25.0
-        temperature_step:
-          target_temperature: 0.1
-          current_temperature: 0.1
+#   - platform: custom
+#     lambda: |-
+#       auto heating = new HeatingDayNight(id(RAUMISTTEMP),id(RAUMSOLLTEMP_NACHT), id(HEIZEN), id(KUEHLEN), id(LUEFTUNG), Property::kRAUMSOLLTEMP_NACHT, Property::kKUEHL_RAUMSOLL_NACHT);
+#       App.register_component(heating);
+#       return {heating};
+#     climates:
+#       name: "Heating Night"
+#       visual:
+#         min_temperature: 10.0
+#         max_temperature: 25.0
+#         temperature_step:
+#           target_temperature: 0.1
+#           current_temperature: 0.1
 
-  - platform: custom
-    lambda: |-
-      auto hot_water = new HotWater(id(SPEICHERISTTEMP),id(EINSTELL_SPEICHERSOLLTEMP), id(WARMWASSERBEREITUNG), Property::kEINSTELL_SPEICHERSOLLTEMP);
-      App.register_component(hot_water);
-      return {hot_water};
-    climates:
-      name: "Hot Water"
-      visual:
-        min_temperature: 30.0
-        max_temperature: 75.0
-        temperature_step:
-          target_temperature: 1.0
-          current_temperature: 0.1
+#   - platform: custom
+#     lambda: |-
+#       auto hot_water = new HotWater(id(SPEICHERISTTEMP),id(EINSTELL_SPEICHERSOLLTEMP), id(WARMWASSERBEREITUNG), Property::kEINSTELL_SPEICHERSOLLTEMP);
+#       App.register_component(hot_water);
+#       return {hot_water};
+#     climates:
+#       name: "Hot Water"
+#       visual:
+#         min_temperature: 30.0
+#         max_temperature: 75.0
+#         temperature_step:
+#           target_temperature: 1.0
+#           current_temperature: 0.1
 
 #########################################
 #                                       #

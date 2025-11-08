@@ -173,7 +173,8 @@ canbus:
     use_extended_id: false
     bit_rate: 20kbps
     spi_id: McpSpi
-    cs_pin: GPIO12
+    cs_pin: GPIO15
+#    int_pin: GPIO35 #  [int_pin] is an invalid option for [canbus.mcp2515].
     on_frame:
     - can_id: 0
       can_id_mask: 0
