@@ -10,41 +10,22 @@ packages:
   BASE:   !include { file: wp_base.yaml}
   TEST:   !include { file: wp25ac_test.yaml}
   
-
-  # ========================================
-  # BESTÄTIGTE TEMPERATUREN (Response 0x100)
-  # ========================================
-  AUSSENTEMP:                     !include { file: wp_temperature.yaml, vars: { property: "AUSSENTEMP", target: "Response" }}
-  SPEICHERISTTEMP:                !include { file: wp_temperature.yaml, vars: { property: "SPEICHERISTTEMP", target: "Response", interval: $interval_medium }}
-  RUECKLAUFISTTEMP:               !include { file: wp_temperature.yaml, vars: { property: "RUECKLAUFISTTEMP", target: "Response", interval: $interval_medium }}
-  
   # ========================================
   # HEIZMODUL-TEMPERATUREN (0x500)
   # ========================================
   HILFSKESSELSOLL:                !include { file: wp_temperature.yaml, vars: { property: "HILFSKESSELSOLL", target: "Heizmodul", update_interval: "never" }}
   HKISTTEMP_HEIZMODUL:            !include { file: wp_temperature.yaml, vars: { property: "HKISTTEMP", target: "Heizmodul" }}
   WPVORLAUFIST:                   !include { file: wp_temperature.yaml, vars: { property: "WPVORLAUFIST", target: "Heizmodul" }}
-  
-  # ========================================
-  # MANAGER-DATEN (0x480)
-  # ========================================
-  VERDICHTER_TEMP:                !include { file: wp_temperature.yaml, vars: { property: "VERDICHTER", target: "Manager" }}
-  
+  OELSUMPFTEMP:  !include { file: wp_temperature.yaml, vars: { property: "OELSUMPFTEMP", target: "Manager" }}
+  FORTLUFTTEMP:  !include { file: wp_temperature.yaml, vars: { property: "FORTLUFTTEMP", target: "Kessel" }}
+    
+   
   # ========================================
   # KESSEL-TEMPERATUREN (0x180)
   # Hinweis: Kessel sendet oft 0, Response (0x100) hat echte Werte!
   # ========================================
   # VORLAUFISTTEMP:                 !include { file: wp_temperature.yaml, vars: { property: "VORLAUFISTTEMP", target: "Kessel" }}
   # RAUMISTTEMP:                    !include { file: wp_temperature.yaml, vars: { property: "RAUMISTTEMP", target: "Kessel" }}
-  
-  # ========================================
-  # ENERGIE-ZÄHLER (bereits funktionierend)
-  # ========================================
-  VERDICHTER_STARTS:               !include { file: wp_generic_combined.yaml, vars: { sensor_name: "VERDICHTER_STARTS", scaled_property: "VERDICHTER_STARTS_K", property: "VERDICHTER_STARTS", unit: "", accuracy_decimals: "0", scaler: "1000", icon: "mdi:counter" }}
-  WAERMEERTRAG_2WE_WW_SUMME_MWH:   !include { file: wp_generic_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_2WE_WW_SUMME_MWH", scaled_property: "WAERMEERTRAG_2WE_WW_SUM_KWH", property: "WAERMEERTRAG_2WE_WW_SUM_MWH", unit: "MWh", accuracy_decimals: "3", icon: "mdi:fire" }}
-  WAERMEERTRAG_2WE_HEIZ_SUMME_MWH: !include { file: wp_generic_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_2WE_HEIZ_SUMME_MWH", scaled_property: "WAERMEERTRAG_2WE_HEIZ_SUM_KWH", property: "WAERMEERTRAG_2WE_HEIZ_SUM_MWH", unit: "MWh", accuracy_decimals: "3", icon: "mdi:fire" }}
-  WAERMEERTRAG_WW_SUMME_MWH:       !include { file: wp_generic_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_WW_SUMME_MWH", scaled_property: "WAERMEERTRAG_WW_SUM_KWH", property: "WAERMEERTRAG_WW_SUM_MWH", unit: "MWh", accuracy_decimals: "3", icon: "mdi:fire" }}
-  WAERMEERTRAG_HEIZ_SUMME_MWH:     !include { file: wp_generic_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_HEIZ_SUMME_MWH", scaled_property: "WAERMEERTRAG_HEIZ_SUM_KWH", property: "WAERMEERTRAG_HEIZ_SUM_MWH", unit: "MWh", accuracy_decimals: "3", icon: "mdi:fire" }}
 
 
 # ========================================
@@ -74,6 +55,15 @@ sensor:
         queueRequest(Manager, Property::kVERDICHTER);
         return {};
 
+  - platform: template
+    name: "Verdichter Starts (Test)"
+    id: verdichter_starts_test
+    icon: "mdi:counter"
+    update_interval: 60s
+    lambda: |-
+        queueRequest(Kessel, Property::kVERDICHTER_STARTS_NEU);
+        return {};        
+
 esphome:
   on_boot:
     priority: -100
@@ -90,7 +80,14 @@ esphome:
               id(verdichter_status).publish_state(value.get<float>());
           });
           queueRequest(Manager, Property::kVERDICHTER);
-
+          
+          CallbackHandler::instance().addCallback(
+            std::make_pair(Kessel, Property::kVERDICHTER_STARTS_NEU),
+            [](const SimpleVariant& value) {
+              id(verdichter_starts_test).publish_state(value.get<float>());
+              ESP_LOGI("TEST", "VERDICHTER_STARTS_NEU = %.0f", value.get<float>());
+            }
+          );
 # ========================================
 # NOTIZEN & TODO
 # ========================================

@@ -335,7 +335,7 @@ struct Property : public detail::Property {
     PROPERTY(EVU, 0x01d3);
     PROPERTY(QUELLE_IST, 0x01d4, Type::et_dec_val);
     PROPERTY(PUFFERSOLLTEMP, 0x01d5, Type::et_dec_val);
-    PROPERTY(WPVORLAUFIST, 0x01d6, Type::et_dec_val);
+    PROPERTY(WPVORLAUFIST, 0x01d6, Type::et_dec_val);//Working
     PROPERTY(HILFSKESSELSOLL, 0x01d7, Type::et_dec_val);//Working
     PROPERTY(FUEHLER_1, 0x01d8, Type::et_dec_val);
     PROPERTY(FUEHLER_2, 0x01d9, Type::et_dec_val);
@@ -632,6 +632,7 @@ struct Property : public detail::Property {
     PROPERTY(LEISTUNG_AUSLEGUNG_KUEHLEN, 0x0692);
     PROPERTY(HEIZLEISTUNG_RELATIV, 0x069a, Type::et_double_val);
     PROPERTY(ABLUFTTEMP, 0x0694, Type::et_dec_val);
+    PROPERTY(VERDICHTER_STARTS_NEU, 0x06ff, Type::et_default); // ⏳ 8145 (zu testen)    
     PROPERTY(VERDICHTER_STARTS, 0x071d);
     PROPERTY(VERDICHTER_STARTS_K, 0x071c);
     PROPERTY(REKUPERATORISTTEMP, 0x07a3);
@@ -721,7 +722,7 @@ struct Property : public detail::Property {
     PROPERTY(D_ANTEIL_EXV, 0x07f9);
     PROPERTY(PENDELN_RELATIV, 0x07fa);
     PROPERTY(FAKTOR_REGELDYNAMIK, 0x07fb);
-    PROPERTY(LZ_VERD_1_HEIZBETRIEB, 0x07fc, Type::et_mil_val);
+    PROPERTY(LZ_VERD_1_HEIZBETRIEB, 0x07fc, Type::et_little_endian);//Working Laufzeit Verdichter Heizen | vorher et_mil_val -> et_little_endian
     PROPERTY(LZ_VERD_2_HEIZBETRIEB, 0x07fd, Type::et_mil_val);
     PROPERTY(LZ_VERD_1_2_HEIZBETRIEB, 0x07fe, Type::et_mil_val);
     PROPERTY(LZ_VERD_1_KUEHLBETRIEB, 0x07ff, Type::et_mil_val);
@@ -831,6 +832,7 @@ struct Property : public detail::Property {
     PROPERTY(P_ANTEIL_EXV_ZE, 0x0945);
     PROPERTY(I_ANTEIL_EXV_ZE, 0x0946);
     PROPERTY(D_ANTEIL_EXV_ZE, 0x0947);
+    PROPERTY(FORTLUFTTEMP, 0x0961, Type::et_dec_val);          // ⏳ 7.9°C (zu testen)
     PROPERTY(SAMMEL_RELAISSTATUS_ANZ, 0x0962);
     PROPERTY(FOLGENWECHSEL_MINCOUNTER_LOW, 0x0963);
     PROPERTY(FOLGENWECHSEL_MINCOUNTER_HIGH, 0x0964);
@@ -900,6 +902,7 @@ struct Property : public detail::Property {
     PROPERTY(ABREGELTEMPERATUR, 0x09fd);
     PROPERTY(SONDERNIVEAU_TEMPERATUR, 0x09ff);
     PROPERTY(AUSSEN_FROSTTEMP, 0x0a00, Type::et_dec_val);
+    PROPERTY(OELSUMPFTEMP, 0x0a36, Type::et_dec_val); //Working Ölsumpftemperatur 
     PROPERTY(BRENNER1LAUFZEIT, 0x0a02);
     PROPERTY(BRENNER1STARTS, 0x0a03);
     PROPERTY(BRENNER2LAUFZEIT, 0x0a04);
