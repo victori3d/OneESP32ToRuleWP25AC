@@ -632,6 +632,7 @@ struct Property : public detail::Property {
     PROPERTY(LEISTUNG_AUSLEGUNG_KUEHLEN, 0x0692);
     PROPERTY(HEIZLEISTUNG_RELATIV, 0x069a, Type::et_double_val);
     PROPERTY(ABLUFTTEMP, 0x0694, Type::et_dec_val);
+    PROPERTY(DRUCK_MULTI, 0x0669, Type::et_default);// Working Nieder, Mittel und Hochdruck
     PROPERTY(VERDICHTER_STARTS_NEU, 0x06ff, Type::et_default); // ⏳ 8145 (zu testen)    
     PROPERTY(VERDICHTER_STARTS, 0x071d);
     PROPERTY(VERDICHTER_STARTS_K, 0x071c);

@@ -32,6 +32,49 @@ packages:
 # ZUSÄTZLICHE SENSOREN (Custom)
 # ========================================
 sensor:
+ # Haupt-Druck-Sensor (empfängt alle Drücke)
+  - platform: template
+    name: "Kältemittel Druck"
+    id: kaeltemittel_druck
+    unit_of_measurement: "bar"
+    device_class: "pressure"
+    state_class: "measurement"
+    accuracy_decimals: 2
+    icon: "mdi:gauge"
+    update_interval: 10s
+    lambda: |-
+        queueRequest(Manager, Property::kDRUCK_MULTI);
+        return {};
+  
+  # Separierte Drücke (automatisch klassifiziert)
+  - platform: template
+    name: "Niederdruck"
+    id: niederdruck
+    unit_of_measurement: "bar"
+    device_class: "pressure"
+    state_class: "measurement"
+    accuracy_decimals: 2
+    icon: "mdi:gauge-low"
+    
+  - platform: template
+    name: "Mitteldruck"
+    id: mitteldruck
+    unit_of_measurement: "bar"
+    device_class: "pressure"
+    state_class: "measurement"
+    accuracy_decimals: 2
+    icon: "mdi:gauge"
+    
+  - platform: template
+    name: "Hochdruck"
+    id: hochdruck
+    unit_of_measurement: "bar"
+    device_class: "pressure"
+    state_class: "measurement"
+    accuracy_decimals: 2
+    icon: "mdi:gauge-high"
+
+
   # Software-Version der Steuerung
   - platform: template
     name: "WP Software Version"
@@ -88,6 +131,51 @@ esphome:
               ESP_LOGI("TEST", "VERDICHTER_STARTS_NEU = %.0f", value.get<float>());
             }
           );
+# Drucksensor
+          ESP_LOGI("DRUCK", "Initialisiere Multi-Druck-Sensor...");
+          
+          CallbackHandler::instance().addCallback(
+            std::make_pair(Manager, Property::kDRUCK_MULTI),
+            [](const SimpleVariant& value) {
+              float raw = value.get<float>();
+              
+              // Ignoriere ungültige Werte
+              if (raw == 0 || raw == 32768) {
+                return;
+              }
+              
+              // Skalierung: Raw ÷ 100 = bar
+              float bar = raw / 100.0;
+              
+              // Publiziere Haupt-Sensor
+              id(kaeltemittel_druck).publish_state(bar);
+              
+              // Klassifiziere und publiziere in entsprechenden Sensor
+              if (bar < 12.0) {
+                // Niederdruck/Mitteldruck: 8-12 bar
+                if (bar < 11.5) {
+                  id(niederdruck).publish_state(bar);
+                  ESP_LOGI("DRUCK", "Niederdruck: %.2f bar", bar);
+                } else {
+                  id(mitteldruck).publish_state(bar);
+                  ESP_LOGI("DRUCK", "Mitteldruck: %.2f bar", bar);
+                }
+              } else if (bar > 18.0) {
+                // Hochdruck: 18-25 bar
+                id(hochdruck).publish_state(bar);
+                ESP_LOGI("DRUCK", "Hochdruck: %.2f bar", bar);
+              } else {
+                // Übergangsbereich: 12-18 bar
+                ESP_LOGD("DRUCK", "Übergangsbereich: %.2f bar", bar);
+              }
+            }
+          );
+          
+          queueRequest(Manager, Property::kDRUCK_MULTI);
+          
+          ESP_LOGI("DRUCK", "Multi-Druck-Sensor bereit!");
+
+
 # ========================================
 # NOTIZEN & TODO
 # ========================================
@@ -129,7 +217,59 @@ esphome:
 # 5. Status-Bits (WAERMEPUMPEN_STATUS) implementieren
 #
 # ========================================
-  
+
+
+
+# ============================================================
+# ERKLÄRUNG
+# ============================================================
+#
+# Register 0x0669 sendet ALLE DREI Drücke des Kältemittelkreislaufs:
+#
+# VERTEILUNG (aus 568 Messungen):
+# - 256x Niederdruck (10-11 bar) = 45%
+# - 28x Mitteldruck (11-12 bar) = 5%
+# - 3x Hochdruck (20-23 bar) = 0.5%
+# - 214x Wert 0 (ungültig) = 38%
+#
+# Das Lambda klassifiziert automatisch:
+# - < 11.5 bar → Niederdruck
+# - 11.5-12 bar → Mitteldruck
+# - > 18 bar → Hochdruck
+#
+# Jeder Druck-Sensor behält seinen letzten Wert, sodass du in
+# Home Assistant immer alle drei Drücke gleichzeitig siehst!
+#
+# ============================================================
+# HOME ASSISTANT
+# ============================================================
+#
+# Entitäten:
+# - sensor.kaeltemittel_druck (alle Drücke gemischt)
+# - sensor.niederdruck (nur Niederdruck-Werte)
+# - sensor.mitteldruck (nur Mitteldruck-Werte)
+# - sensor.hochdruck (nur Hochdruck-Werte)
+#
+# Dashboard:
+# type: entities
+# title: Kältemittel-Drücke
+# entities:
+#   - sensor.niederdruck
+#   - sensor.mitteldruck
+#   - sensor.hochdruck
+#
+# ============================================================
+# ERWARTETE WERTE
+# ============================================================
+#
+# Basierend auf WPM3 (09.11.2025):
+# - Niederdruck: 10.98 bar ✅ (im Log: 10.62-11.37 bar)
+# - Mitteldruck: 11.00 bar ✅ (im Log: 11.00-11.42 bar)
+# - Hochdruck: 21.41 bar ✅ (im Log: 20.48-22.67 bar)
+#
+# Alle drei Werte wurden im 1-Stunden-Log gefunden!
+#
+# ============================================================
   
   
 
