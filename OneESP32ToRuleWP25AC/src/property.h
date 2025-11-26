@@ -7,7 +7,7 @@
 #include <unordered_map>
 #include "type.h"
 
-namespace detail {
+namespace stiebel_detail {
 struct Property {
     std::string_view name;
     std::uint16_t id{0U};
@@ -41,19 +41,19 @@ class Mapper {
     static inline std::unordered_map<std::uint16_t, Property> map;
 };
 
-}  // namespace detail
+}  // namespace stiebel_detail
 
 #define PROPERTY(NAME, VALUE, ...)                                          \
-    static constexpr detail::Property k##NAME{#NAME, VALUE, ##__VA_ARGS__}; \
+    static constexpr stiebel_detail::Property k##NAME{#NAME, VALUE, ##__VA_ARGS__}; \
     static constexpr bool unique##VALUE{true};                              \
-    static inline detail::Mapper k##NAME##_MAPPING {                        \
+    static inline stiebel_detail::Mapper k##NAME##_MAPPING {                        \
         k##NAME                                                             \
     }
 
-struct Property : public detail::Property {
-    constexpr Property(const Property& p) : detail::Property{p.name, p.id, p.type} {}
-    constexpr Property(const detail::Property& p) : detail::Property{p.name, p.id, p.type} {}
-    Property(const std::uint16_t _id) : detail::Property{getProperty(_id)} {}
+struct Property : public stiebel_detail::Property {
+    constexpr Property(const Property& p) : stiebel_detail::Property{p.name, p.id, p.type} {}
+    constexpr Property(const stiebel_detail::Property& p) : stiebel_detail::Property{p.name, p.id, p.type} {}
+    Property(const std::uint16_t _id) : stiebel_detail::Property{getProperty(_id)} {}
 
     PROPERTY(INDEX_NOT_FOUND, 0x0000);
     PROPERTY(FEHLERMELDUNG, 0x0001);
@@ -729,7 +729,7 @@ struct Property : public detail::Property {
     PROPERTY(LZ_VERD_1_KUEHLBETRIEB, 0x07ff, Type::et_mil_val);
     PROPERTY(LZ_VERD_2_KUEHLBETRIEB, 0x0800, Type::et_mil_val);
     PROPERTY(LZ_VERD_1_2_KUEHLBETRIEB, 0x0801, Type::et_mil_val);
-    PROPERTY(LZ_VERD_1_WW_BETRIEB, 0x0802);
+    PROPERTY(LZ_VERD_1_WW_BETRIEB, 0x0802, Type::et_default);
     PROPERTY(LZ_VERD_2_WW_BETRIEB, 0x0803);
     PROPERTY(LZ_VERD_1_2_WW_BETRIEB, 0x0804);
     PROPERTY(LZ_DHC12, 0x0805);

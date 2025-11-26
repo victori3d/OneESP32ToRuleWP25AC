@@ -1,52 +1,56 @@
-# OneESP32ToRuleWP25AC/yaml/wp25ac.yaml
-# esphome:
-#   name: dummy
-#   platformio_options:
-#     build_flags:
-#       - "-DWP25AC"
+# ============================================================
+# WPL 25AC FINALE PRODUKTIONS-KONFIGURATION
+# Version: 2.0 FINAL
+# Datum: 2025-11-09
+# ============================================================
+#
+# Enthält nur getestete, funktionierende Sensoren
+# KEIN Debug-Logging
+# Bereit für Home Assistant Integration
+#
+# ============================================================
 
 packages:
   COMMON: !include { file: common.yaml}
   BASE:   !include { file: wp_base.yaml}
-  TEST:   !include { file: wp25ac_test.yaml}
+
+  # ========================================
+  # TEMPERATUREN (8 Sensoren)
+  # ========================================
   
-  # ========================================
-  # HEIZMODUL-TEMPERATUREN (0x500)
-  # ========================================
-  HILFSKESSELSOLL:                !include { file: wp_temperature.yaml, vars: { property: "HILFSKESSELSOLL", target: "Heizmodul", update_interval: "never" }}
-  HKISTTEMP_HEIZMODUL:            !include { file: wp_temperature.yaml, vars: { property: "HKISTTEMP", target: "Heizmodul" }}
-  WPVORLAUFIST:                   !include { file: wp_temperature.yaml, vars: { property: "WPVORLAUFIST", target: "Heizmodul" }}
-  OELSUMPFTEMP:  !include { file: wp_temperature.yaml, vars: { property: "OELSUMPFTEMP", target: "Manager" }}
-  FORTLUFTTEMP:  !include { file: wp_temperature.yaml, vars: { property: "FORTLUFTTEMP", target: "Kessel" }}
-    
-   
-  # ========================================
-  # KESSEL-TEMPERATUREN (0x180)
-  # Hinweis: Kessel sendet oft 0, Response (0x100) hat echte Werte!
-  # ========================================
-  # VORLAUFISTTEMP:                 !include { file: wp_temperature.yaml, vars: { property: "VORLAUFISTTEMP", target: "Kessel" }}
-  # RAUMISTTEMP:                    !include { file: wp_temperature.yaml, vars: { property: "RAUMISTTEMP", target: "Kessel" }}
-
-
+  HILFSKESSELSOLL:     !include { file: wp_temperature.yaml, vars: { property: "HILFSKESSELSOLL", target: "Heizmodul", update_interval: "never" }}
+  HKISTTEMP:           !include { file: wp_temperature.yaml, vars: { property: "HKISTTEMP", target: "Heizmodul" }}
+  WPVORLAUFIST:        !include { file: wp_temperature.yaml, vars: { property: "WPVORLAUFIST", target: "Heizmodul" }}
+  OELSUMPFTEMP:        !include { file: wp_temperature.yaml, vars: { property: "OELSUMPFTEMP", target: "Manager", interval: $interval_medium }}
+  
+ 
 # ========================================
-# ZUSÄTZLICHE SENSOREN (Custom)
+# SENSOREN (5 zusätzliche)
 # ========================================
+
 sensor:
- # Haupt-Druck-Sensor (empfängt alle Drücke)
-  - platform: template
-    name: "Kältemittel Druck"
-    id: kaeltemittel_druck
-    unit_of_measurement: "bar"
-    device_class: "pressure"
-    state_class: "measurement"
-    accuracy_decimals: 2
-    icon: "mdi:gauge"
-    update_interval: 10s
-    lambda: |-
-        queueRequest(Manager, Property::kDRUCK_MULTI);
-        return {};
+  # === LAUFZEITEN ===
   
-  # Separierte Drücke (automatisch klassifiziert)
+  - platform: template
+    name: "Laufzeit Verdichter Heizen"
+    id: lz_verd_heizen
+    unit_of_measurement: "h"
+    icon: "mdi:timer"
+    accuracy_decimals: 0
+    state_class: "total_increasing"
+    device_class: "duration"
+  
+  - platform: template
+    name: "Laufzeit Verdichter Warmwasser"
+    id: lz_verd_ww
+    unit_of_measurement: "h"
+    icon: "mdi:timer"
+    accuracy_decimals: 0
+    state_class: "total_increasing"
+    device_class: "duration"
+  
+  # === DRÜCKE (Multi-Druck-Sensor) ===
+  
   - platform: template
     name: "Niederdruck"
     id: niederdruck
@@ -74,65 +78,32 @@ sensor:
     accuracy_decimals: 2
     icon: "mdi:gauge-high"
 
-
-  # Software-Version der Steuerung
-  - platform: template
-    name: "WP Software Version"
-    id: wp_software_version
-    icon: "mdi:information"
-    accuracy_decimals: 2
-    update_interval: never
-    lambda: |-
-        queueRequest(Manager, Property::kSOFTWARE_NUMMER);
-        return {};
-
-  # Verdichter-Temperatur (alternative Darstellung)
-  - platform: template
-    name: "Verdichter Status"
-    id: verdichter_status
-    unit_of_measurement: "°C"
-    device_class: "temperature"
-    accuracy_decimals: 1
-    update_interval: $interval_medium
-    lambda: |-
-        queueRequest(Manager, Property::kVERDICHTER);
-        return {};
-
-  - platform: template
-    name: "Verdichter Starts (Test)"
-    id: verdichter_starts_test
-    icon: "mdi:counter"
-    update_interval: 60s
-    lambda: |-
-        queueRequest(Kessel, Property::kVERDICHTER_STARTS_NEU);
-        return {};        
+# ========================================
+# INITIALISIERUNG
+# ========================================
 
 esphome:
   on_boot:
     priority: -100
     then:
       - lambda: |-
-          // Software-Version Callback
-          CallbackHandler::instance().addCallback(std::make_pair(Manager,Property::kSOFTWARE_NUMMER),[](const SimpleVariant& value){
-              id(wp_software_version).publish_state(value.get<float>());
-          });
-          queueRequest(Manager, Property::kSOFTWARE_NUMMER);
-          
-          // Verdichter Callback
-          CallbackHandler::instance().addCallback(std::make_pair(Manager,Property::kVERDICHTER),[](const SimpleVariant& value){
-              id(verdichter_status).publish_state(value.get<float>());
-          });
-          queueRequest(Manager, Property::kVERDICHTER);
+          // === LAUFZEITEN ===
           
           CallbackHandler::instance().addCallback(
-            std::make_pair(Kessel, Property::kVERDICHTER_STARTS_NEU),
+            std::make_pair(Manager, Property::kLZ_VERD_1_HEIZBETRIEB),
             [](const SimpleVariant& value) {
-              id(verdichter_starts_test).publish_state(value.get<float>());
-              ESP_LOGI("TEST", "VERDICHTER_STARTS_NEU = %.0f", value.get<float>());
+              id(lz_verd_heizen).publish_state(value.get<float>());
             }
           );
-# Drucksensor
-          ESP_LOGI("DRUCK", "Initialisiere Multi-Druck-Sensor...");
+          
+          CallbackHandler::instance().addCallback(
+            std::make_pair(Manager, Property::kLZ_VERD_1_WW_BETRIEB),
+            [](const SimpleVariant& value) {
+              id(lz_verd_ww).publish_state(value.get<float>());
+            }
+          );
+          
+          // === MULTI-DRUCK-SENSOR ===
           
           CallbackHandler::instance().addCallback(
             std::make_pair(Manager, Property::kDRUCK_MULTI),
@@ -147,137 +118,72 @@ esphome:
               // Skalierung: Raw ÷ 100 = bar
               float bar = raw / 100.0;
               
-              // Publiziere Haupt-Sensor
-              id(kaeltemittel_druck).publish_state(bar);
-              
-              // Klassifiziere und publiziere in entsprechenden Sensor
+              // Klassifiziere nach Druckbereich
               if (bar < 12.0) {
-                // Niederdruck/Mitteldruck: 8-12 bar
+                // Niederdruck/Mitteldruck
                 if (bar < 11.5) {
                   id(niederdruck).publish_state(bar);
-                  ESP_LOGI("DRUCK", "Niederdruck: %.2f bar", bar);
                 } else {
                   id(mitteldruck).publish_state(bar);
-                  ESP_LOGI("DRUCK", "Mitteldruck: %.2f bar", bar);
                 }
               } else if (bar > 18.0) {
-                // Hochdruck: 18-25 bar
+                // Hochdruck
                 id(hochdruck).publish_state(bar);
-                ESP_LOGI("DRUCK", "Hochdruck: %.2f bar", bar);
-              } else {
-                // Übergangsbereich: 12-18 bar
-                ESP_LOGD("DRUCK", "Übergangsbereich: %.2f bar", bar);
               }
             }
           );
-          
+
+# ========================================
+# ZYKLISCHE ABFRAGEN
+# ========================================
+
+interval:
+  # Laufzeiten alle 5 Minuten
+  - interval: 300s
+    then:
+      - lambda: |-
+          queueRequest(Manager, Property::kLZ_VERD_1_HEIZBETRIEB);
+          queueRequest(Manager, Property::kLZ_VERD_1_WW_BETRIEB);
+  
+  # Drücke alle 10 Sekunden
+  - interval: 10s
+    then:
+      - lambda: |-
           queueRequest(Manager, Property::kDRUCK_MULTI);
-          
-          ESP_LOGI("DRUCK", "Multi-Druck-Sensor bereit!");
-
-
-# ========================================
-# NOTIZEN & TODO
-# ========================================
-# 
-# FUNKTIONIERENDE REGISTER:
-# ✅ AUSSENTEMP (0x000C) via Response (0x100)
-# ✅ SPEICHERISTTEMP (0x000E) via Response (0x100)  
-# ✅ RUECKLAUFISTTEMP (0x0016) via Response (0x100)
-# ✅ HILFSKESSELSOLL (0x01D7) via Heizmodul (0x500)
-# ✅ HKISTTEMP (0x02CA) via Heizmodul (0x500)
-# ✅ VERDICHTER (0x07A8) via Manager (0x480)
-# ✅ SOFTWARE_NUMMER (0x0199) via Manager (0x480)
-#
-# NOCH ZU TESTEN:
-# ⏳ VORLAUFSOLLTEMP (0x0004) - Sollwert für Vorlauf
-# ⏳ PUFFERISTTEMP (0x0078) - Puffer-Ist-Temperatur
-# ⏳ PUFFERSOLLTEMP (0x01D5) - Puffer-Soll-Temperatur
-# ⏳ RAUMSOLLTEMP_I (0x0005) - Raumsolltemperatur HK1
-# ⏳ RAUMSOLLTEMP_II (0x0006) - Raumsolltemperatur HK2
-#
-# BEKANNTE PROBLEME:
-# ⚠️ HKISTTEMP von 0x500 liefert 2 verschiedene Werte (310 & 375)
-#    → Vermutlich HK1 und HK2, aber Unterscheidung unklar
-#    → Workaround: Beide tracken, dann per HA-Automatisierung zuordnen
-#
-# ⚠️ Kessel (0x180) sendet oft Wert 0 (ungültig)
-#    → Response (0x100) hat die echten Werte!
-#    → Target immer auf "Response" setzen
-#
-# ⚠️ ESPClient (0x700) sendet 32768 (0x8000 = Fehlerwert)
-#    → Das sind unsere eigenen Requests ohne Antwort
-#    → Ignorieren oder Timeout erhöhen
-#
-# NÄCHSTE SCHRITTE:
-# 1. 5-Minuten-Log sammeln für vollständige HK-Analyse
-# 2. VORLAUFSOLLTEMP-Register testen
-# 3. Puffer-Temperaturen einbinden
-# 4. HK1/HK2-Unterscheidung final klären
-# 5. Status-Bits (WAERMEPUMPEN_STATUS) implementieren
-#
-# ========================================
-
-
 
 # ============================================================
-# ERKLÄRUNG
+# DOKUMENTATION
 # ============================================================
 #
-# Register 0x0669 sendet ALLE DREI Drücke des Kältemittelkreislaufs:
+# VERFÜGBARE SENSOREN (17):
 #
-# VERTEILUNG (aus 568 Messungen):
-# - 256x Niederdruck (10-11 bar) = 45%
-# - 28x Mitteldruck (11-12 bar) = 5%
-# - 3x Hochdruck (20-23 bar) = 0.5%
-# - 214x Wert 0 (ungültig) = 38%
+# TEMPERATUREN (7):
+# - sensor.aussentemp              (Außentemperatur)
+# - sensor.speicheristtemp         (Warmwasser-Ist)
+# - sensor.wpvorlaufist            (Vorlauf-Ist)
+# - sensor.ruecklaufisttemp        (Rücklauf-Ist)
+# - sensor.hilfskesselsoll         (Hilfskesselsoll)
+# - sensor.hkisttemp               (Heizkreis-Ist)
+# - sensor.oelsumpftemp            (Ölsumpftemperatur)
 #
-# Das Lambda klassifiziert automatisch:
-# - < 11.5 bar → Niederdruck
-# - 11.5-12 bar → Mitteldruck
-# - > 18 bar → Hochdruck
+# DRÜCKE (3):
+# - sensor.niederdruck             (8-11.5 bar)
+# - sensor.mitteldruck             (11.5-12 bar)
+# - sensor.hochdruck               (18-25 bar)
 #
-# Jeder Druck-Sensor behält seinen letzten Wert, sodass du in
-# Home Assistant immer alle drei Drücke gleichzeitig siehst!
+# LAUFZEITEN (2):
+# - sensor.laufzeit_verdichter_heizen      (Stunden)
+# - sensor.laufzeit_verdichter_warmwasser  (Stunden)
 #
-# ============================================================
-# HOME ASSISTANT
-# ============================================================
+# ENERGIE (4):
+# - sensor.waermeertrag_heiz_summe_mwh
+# - sensor.waermeertrag_ww_summe_mwh
+# - sensor.waermeertrag_2we_heiz_summe_mwh
+# - sensor.waermeertrag_2we_ww_summe_mwh
 #
-# Entitäten:
-# - sensor.kaeltemittel_druck (alle Drücke gemischt)
-# - sensor.niederdruck (nur Niederdruck-Werte)
-# - sensor.mitteldruck (nur Mitteldruck-Werte)
-# - sensor.hochdruck (nur Hochdruck-Werte)
+# ZÄHLER (1):
+# - sensor.verdichter_starts
 #
-# Dashboard:
-# type: entities
-# title: Kältemittel-Drücke
-# entities:
-#   - sensor.niederdruck
-#   - sensor.mitteldruck
-#   - sensor.hochdruck
+# PLUS: Binary-Sensoren aus wp_base.yaml
 #
 # ============================================================
-# ERWARTETE WERTE
-# ============================================================
-#
-# Basierend auf WPM3 (09.11.2025):
-# - Niederdruck: 10.98 bar ✅ (im Log: 10.62-11.37 bar)
-# - Mitteldruck: 11.00 bar ✅ (im Log: 11.00-11.42 bar)
-# - Hochdruck: 21.41 bar ✅ (im Log: 20.48-22.67 bar)
-#
-# Alle drei Werte wurden im 1-Stunden-Log gefunden!
-#
-# ============================================================
-  
-  
-
-  # QUELLE_IST:                     !include { file: wp_temperature.yaml, vars: { property: "QUELLE_IST" }}
-  # HILFSKESSELSOLL:                !include { file: wp_temperature.yaml, vars: { property: "HILFSKESSELSOLL", update_interval: "never" }}
-  # HKISTTEMP:                      !include { file: wp_temperature.yaml, vars: { property: "HKISTTEMP" }}
-  # PUFFERISTTEMP:                  !include { file: wp_temperature.yaml, vars: { property: "PUFFERISTTEMP" }}
-  # PUFFERSOLLTEMP:                 !include { file: wp_temperature.yaml, vars: { property: "PUFFERSOLLTEMP" }}
-#  DRUCK_HEIZKREIS:                !include { file: wp_generic.yaml, vars: { property: "DRUCK_HEIZKREIS", interval: "never", unit: "bar"  , icon: "mdi:water-pressure", accuracy_decimals: "1" }}
-#  QUELLENDRUCK:                   !include { file: wp_generic.yaml, vars: { property: "QUELLENDRUCK"   , interval: "never", unit: "bar"  , icon: "mdi:water-pressure", accuracy_decimals: "1" }}
-#  SOMMERBETRIEB_TEMP:             !include { file: wp_number.yaml, vars:  { property: "SOMMERBETRIEB_TEMP", icon: "mdi:sun-thermometer", min: "15.0", max: "25.0", step: "1.0", unit: "°C"  }}  

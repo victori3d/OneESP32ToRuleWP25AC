@@ -37,12 +37,12 @@ esp32:
 #  Logging - Detaillierte Ausgaben für Debugging
 ################################################################################
 logger:
-  level: VERBOSE  # Für Produktion: INFO, für Debug: DEBUG
+  level: INFO  # Für Produktion: INFO, für Debug: DEBUG
   baud_rate: 115200
   # Spezifische Log-Level für Komponenten
   logs:
     sensor: INFO
-    canbus: DEBUG  # CAN-Bus Traffic detailliert loggen
+    canbus: INFO  # CAN-Bus Traffic detailliert loggen
     binary_sensor: INFO
     climate: INFO
 
@@ -132,6 +132,12 @@ time:
     on_time_sync:
       then:
         - logger.log: "Zeit mit Home Assistant synchronisiert"
+  - platform: sntp
+    id: sntp_time
+    timezone: Europe/Berlin
+    servers:
+      - 192.168.178.1  # Dein Gateway
+      - pool.ntp.org        
 
 ################################################################################
 #  Substitutions - Wiederverwendbare Werte
