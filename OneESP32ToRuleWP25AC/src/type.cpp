@@ -19,6 +19,7 @@
 
 #include <algorithm>
 #include <cstring>
+#include <cmath>
 
 #include "mapper.h"
 
@@ -28,6 +29,10 @@ SimpleVariant GetValueByType(const std::uint16_t value, const Type type) {
         case Type::et_byte:
             return (static_cast<float>(value & 0xFF));
         case Type::et_dec_val:
+            // 0x8000 ist ein typischer "invalid/sentinel"-Wert bei Elster/WPM
+            if (value == 0x8000) {
+                return SimpleVariant(NAN);
+            }
             return (static_cast<std::int16_t>(value) / 10.0f);
         case Type::et_cent_val:
             return (static_cast<std::int16_t>(value) / 100.0f);
@@ -44,6 +49,7 @@ SimpleVariant GetValueByType(const std::uint16_t value, const Type type) {
                 // Die Bits werden in wp_base.yaml einzeln ausgewertet
                 return static_cast<float>(value);
         }
+
     
         case Type::et_betriebsart: {
             const auto result = Mapper::instance().getBetriebsart(value);

@@ -94,7 +94,7 @@ packages:
   # ========================================
   # BESTÄTIGTE TEMPERATUREN (Response 0x100)
   # ========================================
-  AUSSENTEMP:                     !include { file: wp_temperature.yaml, vars: { property: "AUSSENTEMP", target: "Response" }}
+  AUSSENTEMP:                     !include { file: wp_temperature.yaml, vars: { property: "AUSSENTEMP"       }}
   SPEICHERISTTEMP:                !include { file: wp_temperature.yaml, vars: { property: "SPEICHERISTTEMP", target: "Response", interval: $interval_medium }}
   RUECKLAUFISTTEMP:               !include { file: wp_temperature.yaml, vars: { property: "RUECKLAUFISTTEMP", target: "Response", interval: $interval_medium }}
 
